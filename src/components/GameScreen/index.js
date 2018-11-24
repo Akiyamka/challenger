@@ -1,4 +1,5 @@
 import React, { Component, useState } from 'react';
+import style from './style.styl';
 
 export default function({ players = [], update, db }) {
   const [ activePlayer, switchActivePlayer ] = useState(null);
@@ -18,7 +19,7 @@ export default function({ players = [], update, db }) {
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
-  
+
   const getTask = () => {
     db.tasks.toCollection().toArray()
       .then(all => switchCurrentTask(
@@ -27,28 +28,38 @@ export default function({ players = [], update, db }) {
   }
 
   const SaveChoiseFragment = () => (
-    <div>
-      <button onClick={() => updateAndNext(activePlayer.savePoints())}> Save to Bank </button>
-      <button onClick={getTask}> Do task </button>
+    <div className={style.buttonDock}>
+      <p>Сохраним накопленное или выполним задание?</p>
+      <button onClick={() => updateAndNext(activePlayer.savePoints())}>Сохранится</button>
+      <button onClick={getTask}>Выполнить задание</button>
     </div>
   );
 
-  const TaskFragment = ({task}) => (
-    <div>
+  const TaskFragment = ({ task }) => (
+    <div className={style.buttonDock}>
+      <h4>Название задания</h4>
       <p>{task.content}</p>
-      <button onClick={() => updateAndNext(activePlayer.taskComplete()) }>Complete</button>
-      <button onClick={() => updateAndNext(activePlayer.taskIncomplete()) }>Not complete</button>
+      <button onClick={() => updateAndNext(activePlayer.taskComplete()) }>Осилил</button>
+      <button onClick={() => updateAndNext(activePlayer.taskIncomplete()) }>Не осилил</button>
     </div>
   );
+
+  const StartFragment = ({ players }) => (
+    <div style={{'text-align': 'center'}}>
+      { players.length > 1
+        ? <button onClick={() => start(players)}> Начать игру </button>
+        : <span>Надо создать хотябы двух игроков для начала игры</span>}
+    </div>
+  )
 
 
   return (
-    <div>
+    <div className={style.root}>
       { activePlayer === null
-        ? <button onClick={() => players.length > 1 && start(players)}> Start game </button>
+        ? <StartFragment players={players} />
         : (
           <div>
-            <h3>Now move {activePlayer.name}</h3>
+            <h2>Ход игрока {activePlayer.name}</h2>
             { currentTask === null
               ? <SaveChoiseFragment />
               : <TaskFragment task={currentTask} />}

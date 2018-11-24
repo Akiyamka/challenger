@@ -5,6 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Challenger</title>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500&amp;subset=cyrillic" rel="stylesheet">
+  <style>
+  html, body {
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+    height: 100%;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 500
+  }
+
+  #app {
+    height: 100%
+  }
+
+  .game-screen {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    max-width: 600px;
+    margin: auto
+  }
+
+  .view {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  button {
+    background-color: dodgerblue;
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer
+  }
+
+  button:hover {
+    border: 1px solid #006fff
+  }
+
+  input {
+    background-color: hsla(0, 0%, 0%, .12);
+    border-radius: 4px 4px 0 0;
+    border: none;
+    padding: 8px 16px;
+    border-bottom: 1px solid gray;
+    color: black;
+  }
+
+  input:focus {
+    border-bottom: 1px solid #006fff;
+    box-shadow: 0px 2px 0px -1px #006fff
+  }
+
+  </style>
 </head>
 <body>
   <section id="app"></section>
