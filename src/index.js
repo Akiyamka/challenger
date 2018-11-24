@@ -8,7 +8,6 @@ import GameScreen from './components/GameScreen';
 import NewTaskForm from './components/NewTaskForm';
 
 import style from './style.css';
-console.log(style.test)
 
 const db = new Dixie("tasks_db");
 db.version(1).stores({
@@ -17,18 +16,15 @@ db.version(1).stores({
 
 function App() {
   const [ players, addPlayer ] = useState([]);
-  const [ newName, setNewName ] = useState('');
   const [ moveCount, changeMoveCount ] = useState(0);
 
   const createPlayer = name => addPlayer(
     [
       ...players,
       new Player({ name })
-    ]
-    ) || setNewName('');
+    ]);
 
   const move = () => changeMoveCount(moveCount + 1)
-
 
   return (
     <div>
