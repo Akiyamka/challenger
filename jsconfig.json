@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "baseUrl": "./",
+    "paths": {
+      "Actions/*": ["src/generated/actions/*"],
+      "Entitys/*": ["src/entitys/*"],
+      "Components/*": ["src/components/*"],
+      "Services/*": ["src/services/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
