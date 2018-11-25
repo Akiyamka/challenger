@@ -18,7 +18,7 @@ export default class TasksDB {
   }
 
   next() {
-    return this.db.tasks.toCollection().toArray()
+    return this.all()
       .then(all => {
         console.log('all tasks: ', all)
         // TODO Add filter completed task
@@ -27,5 +27,13 @@ export default class TasksDB {
         return newTask;
       })
       .catch(e => console.error(e))
+  }
+
+  put(task) {
+    return this.db.tasks.put(task).catch(e => console.error(e))
+  }
+
+  all() {
+    return this.db.tasks.toCollection().toArray();
   }
 }

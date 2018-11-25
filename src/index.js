@@ -38,7 +38,14 @@ function App() {
   }
 
   const nextTask = () => {
-    db.next().then(task => setCurrentTask(task));
+    db.next().then(task => {
+      if (!task && route !== routes.tasks) {
+        setRoute(routes.tasks)
+      } else {
+        setCurrentTask(task)
+      }
+
+    });
   }
 
   const nextMove = () => {
@@ -51,10 +58,19 @@ function App() {
     nextTask();
   }
 
+  const addTask = task => {
+    db.put(task)
+    .then(() => db.all())
+    .then(tasks => {
+      setTasks([...tasks]);
+    });
+  }
+
+
   return (
     <div className="game-screen view">
       { route === routes.start && <StartGameStep create={createPlayer} setRoute={setRoute} players={players} /> }
-      { route === routes.tasks && <NewTaskForm tasks={tasks} setTasks={setTasks} setRoute={setRoute} /> }
+      { route === routes.tasks && <NewTaskForm tasks={tasks} addTask={addTask} setRoute={setRoute} /> }
       { route === routes.game  && <GameScreen
                                 players={players}
                                 setRoute={setRoute}
