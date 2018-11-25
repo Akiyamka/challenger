@@ -22,7 +22,7 @@ export default function ({ create, players, setRoute }) {
   )
 
   return (
-    <div>
+    <div className={[style.startScreen, 'column'].join(' ')}>
       <StartFragment players={players} />
       <PlayersListFramgent players={players} />
       <div className={['row', style.dock].join(' ')}>
