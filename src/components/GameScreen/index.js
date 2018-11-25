@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import style from './style.styl';
+import ScoreTable from './../ScoreTable';
 
 export default function({
   players,
@@ -16,35 +17,12 @@ export default function({
     setCurrentPlayer(players[0])
   }
 
-  const ScoreTableFragment = ({ name }) => (
-    <React.Fragment>
-
-    <h2>Текущий счет: </h2>
-    <div className={style.score}>
-    { players.map(pl => (
-      <div key={pl.name} className={[style.row, pl.name === name ? style.active : ''].join(' ')}>
-        <div className={[style.col, style.firstcol].join(' ')}>
-          {pl.name}:
-        </div>
-        <div className={style.col}>
-          bank: {pl.bank}
-        </div>
-        <div className={style.col}>
-          factor: {pl.factor}
-        </div>
-      </div>
-    ))}
-    </div>
-
-    </React.Fragment>
-  );
-
   const SaveChoiseFragment = () => (
     <div style={{flex: 1}}>
       <p>Сохраним накопленное или выполним задание?</p>
       <div className={style.buttonDock}>
-        <button onClick={() => currentPlayer.savePoints() && nextMove() }>Сохраниться</button>
         <button onClick={() => switchTaskShow(true)}>Выполнить задание</button>
+        <button onClick={() => currentPlayer.savePoints() && nextMove() }>Сохраниться</button>
       </div>
     </div>
   );
@@ -71,6 +49,8 @@ export default function({
           }
         </div>
       }
+
+      { currentPlayer && <ScoreTable name={currentPlayer.name} players={players} /> }
     </div>
   )
 }
