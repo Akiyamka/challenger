@@ -1,71 +1,76 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import style from './style.styl';
 
-export default function({ players = [], update, db }) {
-  const [ activePlayer, switchActivePlayer ] = useState(null);
-  const [ currentTask, switchCurrentTask ] = useState(null);
+export default function({
+  players,
+  setRoute,
+  currentPlayer,
+  setCurrentPlayer,
+  currentTask,
+  nextMove
+}) {
+  const [ isShowTask, switchTaskShow ] = useState(false);
 
-  const start = players => switchActivePlayer(players[0]);
-
-  const getNextPlayer = () => {
-    const nextIndex = players.indexOf(activePlayer) + 1;
-    return nextIndex > players.length - 1 ? players[0] : players[nextIndex]
-  };
-
-  const updateAndNext = newState => update(newState)
-    || switchActivePlayer(getNextPlayer())
-    || switchCurrentTask(null) ;
-
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
+  /* Game start */
+  if (currentPlayer === null) {
+    setCurrentPlayer(players[0])
   }
 
-  const getTask = () => {
-    db.tasks.toCollection().toArray()
-      .then(all => switchCurrentTask(
-        all[getRandomInt(0, all.length)]
-      )).catch(e => console.error(e))
-  }
+  const ScoreTableFragment = ({ name }) => (
+    <React.Fragment>
+
+    <h2>Текущий счет: </h2>
+    <div className={style.score}>
+    { players.map(pl => (
+      <div key={pl.name} className={[style.row, pl.name === name ? style.active : ''].join(' ')}>
+        <div className={[style.col, style.firstcol].join(' ')}>
+          {pl.name}:
+        </div>
+        <div className={style.col}>
+          bank: {pl.bank}
+        </div>
+        <div className={style.col}>
+          factor: {pl.factor}
+        </div>
+      </div>
+    ))}
+    </div>
+
+    </React.Fragment>
+  );
 
   const SaveChoiseFragment = () => (
-    <div className={style.buttonDock}>
+    <div style={{flex: 1}}>
       <p>Сохраним накопленное или выполним задание?</p>
-      <button onClick={() => updateAndNext(activePlayer.savePoints())}>Сохранится</button>
-      <button onClick={getTask}>Выполнить задание</button>
+      <div className={style.buttonDock}>
+        <button onClick={() => currentPlayer.savePoints() && nextMove() }>Сохраниться</button>
+        <button onClick={() => switchTaskShow(true)}>Выполнить задание</button>
+      </div>
     </div>
   );
 
   const TaskFragment = ({ task }) => (
-    <div className={style.buttonDock}>
+    task ? <div style={{flex: 1}}>
       <h4>Название задания</h4>
       <p>{task.content}</p>
-      <button onClick={() => updateAndNext(activePlayer.taskComplete()) }>Осилил</button>
-      <button onClick={() => updateAndNext(activePlayer.taskIncomplete()) }>Не осилил</button>
-    </div>
+      <div className={style.buttonDock}>
+        <button onClick={() => currentPlayer.taskComplete() && nextMove() || switchTaskShow(false)}>Осилил</button>
+        <button onClick={() => currentPlayer.taskIncomplete() && nextMove() || switchTaskShow(false)}>Не осилил</button>
+      </div>
+    </div> : <div> Загружаю задание... </div>
   );
-
-  const StartFragment = ({ players }) => (
-    <div style={{'text-align': 'center'}}>
-      { players.length > 1
-        ? <button onClick={() => start(players)}> Начать игру </button>
-        : <span>Надо создать хотябы двух игроков для начала игры</span>}
-    </div>
-  )
-
 
   return (
     <div className={style.root}>
-      { activePlayer === null
-        ? <StartFragment players={players} />
-        : (
-          <div>
-            <h2>Ход игрока {activePlayer.name}</h2>
-            { currentTask === null
-              ? <SaveChoiseFragment />
-              : <TaskFragment task={currentTask} />}
-          </div>
-          )
-       }
+      { currentPlayer &&
+        <div className={style.taskContainer}>
+          <h2>Ход игрока {currentPlayer.name}</h2>
+          { currentPlayer.factor === 0 || isShowTask
+            ? <TaskFragment task={currentTask} />
+            : <SaveChoiseFragment />
+          }
+        </div>
+      }
     </div>
   )
 }

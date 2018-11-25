@@ -25,7 +25,6 @@ class NewTaskForm extends React.Component {
     const text = this.text.value;
     this.setState({ isAddTasksScreen: true, isAddTextTaskScreen: false, isAddVideoTaskScreen: false }, () => {
       this.db.tasks.put({ content: text, type: "text" }).then(() => {
-        console.log(this.db.tasks.toCollection().toArray());
       }).catch(e => console.warn(e))
     });
   }
