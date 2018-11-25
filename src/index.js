@@ -44,7 +44,6 @@ function App() {
       } else {
         setCurrentTask(task)
       }
-
     });
   }
 
@@ -63,6 +62,7 @@ function App() {
     .then(() => db.all())
     .then(tasks => {
       setTasks([...tasks]);
+      setCurrentTask(tasks[0])
     });
   }
 

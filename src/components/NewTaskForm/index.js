@@ -19,7 +19,10 @@ export default function NewTaskForm({
           <h2>Заработать карточек</h2>
           <button onClick={() => setScreen('textTask')}> Создать текст карточку </button>
           <button onClick={() => setScreen('videoTask')}> Создать видео карточку </button>
-          { tasks && tasks.length > 5  && <button onClick={() => setRoute(routes.start)}> Начать игру </button> }
+          { tasks && tasks.length > 4
+            ? <button onClick={() => setRoute(routes.start)}> Начать игру </button>
+            : <p> Нужно хотябы 5 заданй уникальных</p>
+          }
         </div>)
       }
       { screen === 'textTask' && (<div>
